@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc -w"
+    "compile": "tsc -w",
+    "start": "node program.js"
   },
   "keywords": [],
   "author": "",
