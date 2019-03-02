@@ -26,7 +26,7 @@ class StartUp {
         });
         this.app.route("/api/v1/pokemons/:id").get((req, res) => {
             let id = req.params.id;
-            pokemonsController_1.default.getById(id, req, res);
+            Number(id) ? pokemonsController_1.default.getById(id, req, res) : res.status(404).send({ error: "Não foi possivel efetuar sua consulta." });
         });
     }
 }

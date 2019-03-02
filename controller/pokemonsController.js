@@ -12,11 +12,19 @@ class PokemonsController {
             return helper_1.default.sendResponse(res, HttpStatus.OK, pokemonsService_1.default.getPokemons());
         }
         else {
-            return console.error.bind(console, 'Erro no consumo da api');
+            return helper_1.default.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'Erro no consumo da api');
         }
     }
     getById(id, req, res) {
         pokemonsService_1.default.getPokemonbyId(id, req, res);
+    }
+    resById(req, res) {
+        if (pokemonsService_1.default.getPokemon().nome) {
+            return helper_1.default.sendResponse(res, HttpStatus.OK, pokemonsService_1.default.getPokemon());
+        }
+        else {
+            return helper_1.default.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'Erro no consumo da api');
+        }
     }
 }
 exports.default = new PokemonsController();

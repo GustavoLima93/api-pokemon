@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request");
-const HttpStatus = require("http-status");
 const enviroment_1 = require("../infra/enviroment");
-const helper_1 = require("../infra/helper");
+const pokemonsController_1 = require("../controller/pokemonsController");
 const pokemon_model_1 = require("../models/pokemon.model");
+const pokemonDetails_model_1 = require("./../models/pokemonDetails.model");
 class PokemonsService {
     constructor() {
         this.URL_GETALL = `${enviroment_1.default.url}/?limit=807`;
@@ -14,7 +14,7 @@ class PokemonsService {
     getAllRest() {
         request(this.URL_GETALL, (err, res, body) => {
             let pokemons = JSON.parse(body).results;
-            pokemons.forEach((element, index) => {
+            pokemons ? pokemons.forEach((element, index) => {
                 if (index < 10) {
                     this.pokemons.push(new pokemon_model_1.Pokemon(index + 1, element.name, `https://assets.pokemon.com/assets/cms2/img/pokedex/full/00${index +
                         1}.png`));
@@ -27,18 +27,33 @@ class PokemonsService {
                     this.pokemons.push(new pokemon_model_1.Pokemon(index + 1, element.name, `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${index +
                         1}.png`));
                 }
-            });
+            }) : err;
         });
     }
-    getPokemonbyId(id, req, ressponse) {
+    getPokemonbyId(id, req, response) {
         request(`${this.URL_GETPOKEMON}${id}`, (err, res, body) => {
-            let pokemon = JSON.parse(body);
-            this.pokemon = pokemon;
-            return this.res(req, ressponse);
+            if (body != 'Not Found') {
+                let pokemon = JSON.parse(body);
+                this.pokemon = new pokemonDetails_model_1.PokemonDetails();
+                pokemon.types.forEach(element => {
+                    this.pokemon.tipo.push(element.type.name);
+                });
+                pokemon.stats.forEach(element => {
+                    this.pokemon.statusBase.push(element.base_stat);
+                    this.pokemon.statusName.push(element.stat.name);
+                });
+                this.pokemon.sprites.push(pokemon.sprites.front_default);
+                this.pokemon.sprites.push(pokemon.sprites.front_shiny);
+                this.pokemon.sprites.push(pokemon.sprites.back_default);
+                this.pokemon.sprites.push(pokemon.sprites.back_shiny);
+                this.pokemon.nome = pokemon.name;
+                return pokemonsController_1.default.resById(req, response);
+            }
+            else {
+                this.pokemon = new pokemonDetails_model_1.PokemonDetails();
+                return pokemonsController_1.default.resById(req, response);
+            }
         });
-    }
-    res(req, res) {
-        return helper_1.default.sendResponse(res, HttpStatus.OK, this.getPokemon());
     }
     getPokemons() {
         return this.pokemons;
