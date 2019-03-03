@@ -5,6 +5,7 @@ const enviroment_1 = require("../infra/enviroment");
 const pokemonsController_1 = require("../controller/pokemonsController");
 const pokemon_model_1 = require("../models/pokemon.model");
 const pokemonDetails_model_1 = require("./../models/pokemonDetails.model");
+const statu_model_1 = require("../models/statu.model");
 class PokemonsService {
     constructor() {
         this.URL_GETALL = `${enviroment_1.default.url}/?limit=807`;
@@ -39,8 +40,7 @@ class PokemonsService {
                     this.pokemon.tipo.push(element.type.name);
                 });
                 pokemon.stats.forEach(element => {
-                    this.pokemon.statusBase.push(element.base_stat);
-                    this.pokemon.statusName.push(element.stat.name);
+                    this.pokemon.status.push(new statu_model_1.Statu(element.stat.name, element.base_stat));
                 });
                 this.pokemon.sprites.push(pokemon.sprites.front_default);
                 this.pokemon.sprites.push(pokemon.sprites.front_shiny);
