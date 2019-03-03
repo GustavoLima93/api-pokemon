@@ -15,14 +15,21 @@ class PokemonsController {
             return helper_1.default.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'Erro no consumo da api');
         }
     }
-    getById(id, req, res) {
-        pokemonsService_1.default.getPokemonbyId(id, req, res);
+    getById(req, res) {
+        let id = req.params.id;
+        if (Number(id)) {
+            pokemonsService_1.default.getPokemonbyId(id, req, res);
+        }
+        else {
+            return helper_1.default.sendResponse(res, HttpStatus.NOT_FOUND, 'Parametros errados');
+        }
     }
     resById(req, res) {
         if (pokemonsService_1.default.getPokemon().nome) {
             return helper_1.default.sendResponse(res, HttpStatus.OK, pokemonsService_1.default.getPokemon());
         }
         else {
+            console.log('entrou aqui');
             return helper_1.default.sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'Erro no consumo da api');
         }
     }

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const pokemonsController_1 = require("./controller/pokemonsController");
 class StartUp {
     constructor() {
@@ -13,7 +14,15 @@ class StartUp {
     startConsumo() {
         return pokemonsController_1.default.startRest();
     }
+    enableCors() {
+        const options = {
+            methods: "GET,OPTIONS,PUT,POST,DELETE",
+            origin: "*"
+        };
+        this.app.use(cors(options));
+    }
     middler() {
+        this.enableCors();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
@@ -25,8 +34,7 @@ class StartUp {
             pokemonsController_1.default.get(req, res);
         });
         this.app.route("/api/v1/pokemons/:id").get((req, res) => {
-            let id = req.params.id;
-            Number(id) ? pokemonsController_1.default.getById(id, req, res) : res.status(404).send({ error: "Não foi possivel efetuar sua consulta." });
+            pokemonsController_1.default.getById(req, res);
         });
     }
 }
