@@ -15,11 +15,11 @@ class PokemonsService {
         request(this.URL_GETALL, (err, res, body) => {
             let pokemons = JSON.parse(body).results;
             pokemons ? pokemons.forEach((element, index) => {
-                if (index < 10) {
+                if (index <= 10) {
                     this.pokemons.push(new pokemon_model_1.Pokemon(index + 1, element.name, `https://assets.pokemon.com/assets/cms2/img/pokedex/full/00${index +
                         1}.png`));
                 }
-                if (index > 9 && index < 100) {
+                if (index > 9 && index <= 100) {
                     this.pokemons.push(new pokemon_model_1.Pokemon(index + 1, element.name, `https://assets.pokemon.com/assets/cms2/img/pokedex/full/0${index +
                         1}.png`));
                 }
