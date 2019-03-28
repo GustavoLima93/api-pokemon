@@ -3,16 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const pokemonsController_1 = require("./controller/pokemonsController");
+const firebasedb_1 = require("./infra/firebasedb");
+const pokemonsController_1 = require("./controllers/pokemonsController");
 class StartUp {
     constructor() {
+        firebasedb_1.default.connectionDb;
         this.app = express();
-        this.startConsumo();
         this.middler();
         this.routes();
-    }
-    startConsumo() {
-        return pokemonsController_1.default.startRest();
     }
     enableCors() {
         const options = {
@@ -28,14 +26,12 @@ class StartUp {
     }
     routes() {
         this.app.route("/").get((req, res) => {
-            res.status(200).send({ versão: "0.0.1" });
+            res.send({ versao: "GHLIMA-API-POkEMON-V2" });
         });
-        this.app.route("/api/v1/pokemons").get((req, res) => {
-            pokemonsController_1.default.get(req, res);
-        });
-        this.app.route("/api/v1/pokemons/:id").get((req, res) => {
-            pokemonsController_1.default.getById(req, res);
-        });
+        this.app.route("/api/v2/pokemons").get(pokemonsController_1.default.getAll);
+        this.app.route("/api/v2/pokemon/:id").get(pokemonsController_1.default.getById);
+        this.app.route("/api/v2/pokemon/name/:id").get(pokemonsController_1.default.getByName);
+        this.app.route("/api/v2/pokemons/generation/:id").get(pokemonsController_1.default.getByGeneration);
     }
 }
 exports.default = new StartUp();
